@@ -17,7 +17,7 @@
     "storybook": "node ./server/server.js | start-storybook -p 9010",
     "build": "npm run test-ci && cross-env NODE_ENV=production webpack -p --config webpack.dist.config.js",
     "publish-module": "publish",
-    "postversion": "git push origin && git push origin --tags",
+    "postversion": "git push origin && git push origin --tags"
   },
   "devDependencies": {
     "babel-cli": "^6.5.0",
@@ -70,7 +70,7 @@
     "babel-runtime": "^6.5.0",
     "loglevel": "^1.4.1",
     "radium": "^0.18.1",
-    "react-addons-test-utils": "^15.0.0",
+    "react-addons-test-utils": "^15.0.0"
   },
   "main": "dist/index.js",
   "engines": {

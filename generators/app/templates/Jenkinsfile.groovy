@@ -8,8 +8,7 @@ projectBranch = 'master'
 // Credentials are based on the pi-digital-jenkins user
 jenkinsCred = <%= jenkinsCredentials %>
 jenkinsCredentials = "$jenkinsCred"
-checkpointCred = <%= checkpointCredentials %>
-checkpointCredentials = '$checkpointCred'
+checkpointCredentials = 'cc857005-08d0-4e4d-b630-5722f2a7c08f'
 
 buildSlave = <%= buildSlaveLabel %>
 buildSlaveLabel = "$buildSlave"

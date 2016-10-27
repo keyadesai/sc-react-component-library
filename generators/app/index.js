@@ -8,23 +8,17 @@ var extend = _.merge;
 module.exports = module.exports = generators.Base.extend({
   constructor: function () {
     generators.Base.apply(this, arguments);
-    this.argument('componentLibraryName', { type: String, required: true });
-
-    this.componentLibraryName = this.componentLibraryName || '';
-    this.prettyComponentLibraryName = this.componentLibraryName
-      .split('-')
-      .map(function (word) {
-        return _.capitalize(word);
-      })
-      .join(' ');
-
-      this.props = {};
+    this.props = {
+    };
   },
 
   prompting: {
     greeting: function () {
       this.log(yosay(
-        'Welcome to the phenomenal ' + chalk.red('Electrode App') + ' generator!'
+        'Welcome to the phenomenal ' + chalk.red('Suncorp React Component Library') + ' generator!'
+      ));
+      this.log(yosay(
+        'Now please answer some questions, so we can generate this project the way you want!!'
       ));
     },
 
@@ -32,46 +26,30 @@ module.exports = module.exports = generators.Base.extend({
 
       var prompts = [
         {
-          name: 'name',
-          message: 'Application Name',
-          when: !this.props.name,
-          default: path.basename(process.cwd()),
+          name: 'componentLibraryName',
+          message: 'Enter your library Name',
+          when: !this.props.componentLibraryName,
+          default: 'suncorp-react-components',
           store: true
         },
         {
           name: 'description',
-          message: 'Description',
+          message: 'Short description about this project',
           when: !this.props.description,
           store: true
         },
         {
-          name: 'projectName',
-          message: 'projectName',
-          when: !this.props.projectName,
-          store: true
-        },
-        {
-          name: 'projectUrl',
-          message: 'projectUrl',
-          when: !this.props.projectUrl,
-          store: true
-        },
-        {
           name: 'jenkinsCredentials',
-          message: 'jenkinsCredentials',
-          when: !this.props.authorEmail,
-          store: true
-        },
-        {
-          name: 'checkpointCredentials',
-          message: 'checkpointCredentials',
-          when: !this.props.authorUrl,
+          message: 'Enter jenkins credentials',
+          when: !this.props.jenkinsCredentials,
+          default: '9c7e9bfe-ff5b-413e-973c-874d5986d19b',
           store: true
         },
         {
           name: 'buildSlaveLabel',
-          message: 'buildSlaveLabel',
+          message: 'Enter Alfred build slave label',
           when: !this.props.buildSlaveLabel,
+          default: 'nodejs-build',
           store: true
         }
       ];
@@ -91,7 +69,7 @@ module.exports = module.exports = generators.Base.extend({
         'gitignore',
         'npmignore'
       ].forEach(function (fileName) {
-        self.copy(fileName, self.componentLibraryName + '/.' + fileName);
+        self.copy(fileName, self.props.componentLibraryName + '/.' + fileName);
       });
     },
 
@@ -105,7 +83,7 @@ module.exports = module.exports = generators.Base.extend({
         '.scripts/user/prepublish.sh',
         '.scripts/user/pretest.js',
       ].forEach(function (fileName) {
-        self.copy(fileName, self.componentLibraryName + '/' + fileName);
+        self.copy(fileName, self.props.componentLibraryName + '/' + fileName);
       });
     },
 
@@ -114,9 +92,9 @@ module.exports = module.exports = generators.Base.extend({
 
       self.template(
         'package.json',
-        self.componentLibraryName + '/package.json',
+        self.props.componentLibraryName + '/package.json',
         {
-          name: self.componentLibraryName,
+          name: self.props.componentLibraryName,
           description: self.props.description,
           githubUrl: self.props.projectUrl
         }
@@ -127,17 +105,27 @@ module.exports = module.exports = generators.Base.extend({
       var self = this;
       self.template(
         'README.md',
-        self.componentLibraryName + '/README.md',
+        self.props.componentLibraryName + '/README.md',
         {
-          name: self.prettyComponentLibraryName,
+          name: this.props.componentLibraryName
+      .split('-')
+      .map(function (word) {
+        return _.capitalize(word);
+      })
+      .join(' '),
           description: self.props.description
         }
       );
 
       self.template(
         'CONTRIBUTING.md',
-        self.componentLibraryName + '/CONTRIBUTING.md',
-        { name: self.prettyComponentLibraryName }
+        self.props.componentLibraryName + '/CONTRIBUTING.md',
+        { name: this.props.componentLibraryName
+      .split('-')
+      .map(function (word) {
+        return _.capitalize(word);
+      })
+      .join(' ')}
       );
     },
 
@@ -145,7 +133,7 @@ module.exports = module.exports = generators.Base.extend({
       var self = this;
       self.template(
         'Jenkinsfile.groovy',
-        self.componentLibraryName + '/Jenkinsfine.groovy',
+        self.props.componentLibraryName + '/Jenkinsfine.groovy',
         {
           projectName: self.props.projectName,
           projectUrl: self.props.projectUrl,
@@ -171,18 +159,24 @@ module.exports = module.exports = generators.Base.extend({
         'src/stories/index.js',
         'src/tests/index.js'
       ].forEach(function (fileName) {
-        self.copy(fileName, self.componentLibraryName + '/' + fileName);
+        self.copy(fileName, self.props.componentLibraryName + '/' + fileName);
       });
     }
   },
 
   end: {
     logMessage: function () {
+      let prettyName = this.props.componentLibraryName
+      .split('-')
+      .map(function (word) {
+        return _.capitalize(word);
+      })
+      .join(' ');
       this.log('');
-      this.log('Awesome! Your component library"' + this.prettyComponentLibraryName + '" is ready!');
+      this.log('Awesome! Your component library"' + prettyName + '" is ready!');
       this.log('Apply following commands to install dependencies.');
       this.log('');
-      this.log(' cd ' + this.componentLibraryName);
+      this.log(' cd ' + this.props.componentLibraryName);
       this.log(' npm install');
       this.log('');
       this.log('More information found in README.md');
